@@ -2,6 +2,7 @@
  * Create a list that holds all of your cards
  */
 
+let allCards = document.querySelectorAll('.card');
 
 /*
  * Display the cards on the page
@@ -9,6 +10,16 @@
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+
+let shuffeledCards = shuffle(allCards);
+/*
+for(let i = 0; i<=16; i++){
+makeCard.className=`card ${allCards[i]}`;
+makeCard.innerHtml =`<li class="${allCards[i]}"></li>`;
+makeCard.classList.add(allCards[i]);
+}
+*/
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
