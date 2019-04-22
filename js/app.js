@@ -16,23 +16,22 @@ const allCardsArr = Array.from(allCards);
 const shuffledAllCards = shuffle(allCardsArr);
 
 for(let i = 0; i<16; i++){
-// 1. Save the element 'i', which needed to be changed allCards[i].querySelector('i')
-var itemToChange = allCards[i].querySelector('i');
+    //get the class to remove
+    var oldClass = allCards[i].querySelector('i').classList[1];
 
-// 2. Get classList array of 1
-// 3. Delete the element [1] of the array 2
-itemToChange.classList.remove(itemToChange.classList[1]);
+    //get the class to add
+    var newClass = shuffledAllCards[i].querySelector('i').classList[1];
 
-// 4. Get elemnt 'i' of the shuffledAllCards shuffledAllCards[i].querySelector('i')
+    //just for debugging
+/* console.log('This is the element ' + i + ' of allCards ' + oldClass + ' and its gonna to be replaced with ' + newClass); */
 
-// 5. Get classList array of 4
-// 6. Get only element [1] of the 5
-var itemToAdd = shuffledAllCards[i].querySelector('i').classList[1];
-// 7. Replace 1 with the class 6
-itemToChange.classList.add(itemToAdd);
+    //get the place where to change
+    var itemToChange = allCards[i].querySelector('i');
 
+    //change classes
+    itemToChange.classList.remove(oldClass);
+    itemToChange.classList.add(newClass);
 }
-
 
 
 // Shuffle function from http://stackoverflow.com/a/2450976
