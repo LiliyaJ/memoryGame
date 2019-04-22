@@ -2,7 +2,7 @@
  * Create a list that holds all of your cards
  */
 
-let allCards = document.querySelectorAll('.card');
+const allCards = document.querySelectorAll('.card');
 
 /*
  * Display the cards on the page
@@ -11,14 +11,28 @@ let allCards = document.querySelectorAll('.card');
  *   - add each card's HTML to the page
  */
 
-let shuffeledCards = shuffle(allCards);
-/*
-for(let i = 0; i<=16; i++){
-makeCard.className=`card ${allCards[i]}`;
-makeCard.innerHtml =`<li class="${allCards[i]}"></li>`;
-makeCard.classList.add(allCards[i]);
+ 
+const allCardsArr = Array.from(allCards);
+const shuffledAllCards = shuffle(allCardsArr);
+
+for(let i = 0; i<16; i++){
+// 1. Save the element 'i', which needed to be changed allCards[i].querySelector('i')
+var itemToChange = allCards[i].querySelector('i');
+
+// 2. Get classList array of 1
+// 3. Delete the element [1] of the array 2
+itemToChange.classList.remove(itemToChange.classList[1]);
+
+// 4. Get elemnt 'i' of the shuffledAllCards shuffledAllCards[i].querySelector('i')
+
+// 5. Get classList array of 4
+// 6. Get only element [1] of the 5
+var itemToAdd = shuffledAllCards[i].querySelector('i').classList[1];
+// 7. Replace 1 with the class 6
+itemToChange.classList.add(itemToAdd);
+
 }
-*/
+
 
 
 // Shuffle function from http://stackoverflow.com/a/2450976
