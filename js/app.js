@@ -60,3 +60,54 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+ let openedCards = [];
+ let counter = 0;
+ const movesCounter = document.querySelector('.moves');
+ const stars = document.querySelector('.stars');
+
+  
+ 
+
+ allCards.forEach(function(card){
+    card.addEventListener('click', function(){
+
+//counts moves
+    counter++;
+    movesCounter.innerHTML = counter;
+    
+    //remove stars
+    if (counter>0 && counter<49  && counter%16==0){
+        stars.removeChild(stars.firstChild);
+    }
+       
+        if(openedCards.length <= 1){
+            openedCards.push(card);
+            card.classList.add('open', 'show');
+        }else{
+            //check if they match
+            if(cardsMatch(openedCards)){
+                
+                openedCards.forEach(function(card){
+                    card.classList.remove('open', 'show');
+                    card.classList.add('match');
+                    openedCards = [];
+                });
+            }else{
+                setTimeout(function(){
+                    openedCards.forEach(function(card){
+                        card.classList.remove('open', 'show');
+                    });//openedCards
+                    openedCards = [];
+                }, 300)//timeout
+            }//else
+        }
+        console.log(openedCards);
+        
+});  
+});
+
+function cardsMatch(array){
+    return (openedCards[0].querySelector('i').classList[1] === openedCards[1].querySelector('i').classList[1]);
+}
+
