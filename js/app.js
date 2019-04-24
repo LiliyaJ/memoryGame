@@ -65,8 +65,6 @@ function shuffle(array) {
  let counter = 0;
  const movesCounter = document.querySelector('.moves');
  const stars = document.querySelector('.stars');
-
-  
  
 
  allCards.forEach(function(card){
@@ -75,39 +73,47 @@ function shuffle(array) {
 //counts moves
     counter++;
     movesCounter.innerHTML = counter;
-    
-    //remove stars
-    if (counter>0 && counter<49  && counter%16==0){
-        stars.removeChild(stars.firstChild);
+
+    if(timeToRemoveStar()){
+        stars.removeChild(stars.firstElementChild);
     }
-       
-        if(openedCards.length <= 1){
-            openedCards.push(card);
-            card.classList.add('open', 'show');
+    
+    //debugging
+    console.log('moves ' + counter);
+
+    openedCards.push(card);
+    card.classList.add('open', 'show');
+
+    //debugging
+    console.log(openedCards);
+    console.log(openedCards.length);
+    
+    if (openedCards.length == 2){
+         //check if they match
+         if(cardsMatch(openedCards)){  
+            openedCards.forEach(function(card){
+                card.classList.remove('open', 'show');
+                card.classList.add('match');
+                openedCards = [];
+            });
         }else{
-            //check if they match
-            if(cardsMatch(openedCards)){
-                
+            //if they don't match
+            setTimeout(function(){
                 openedCards.forEach(function(card){
                     card.classList.remove('open', 'show');
-                    card.classList.add('match');
-                    openedCards = [];
-                });
-            }else{
-                setTimeout(function(){
-                    openedCards.forEach(function(card){
-                        card.classList.remove('open', 'show');
-                    });//openedCards
-                    openedCards = [];
-                }, 300)//timeout
-            }//else
-        }
-        console.log(openedCards);
-        
+                });//openedCards
+                openedCards = [];
+            }, 300)//timeout
+        }//else
+    }    
 });  
 });
+
 
 function cardsMatch(array){
     return (openedCards[0].querySelector('i').classList[1] === openedCards[1].querySelector('i').classList[1]);
 }
 
+function timeToRemoveStar(){
+    return(counter > 0 && counter < 49 && counter%16==0);
+}
