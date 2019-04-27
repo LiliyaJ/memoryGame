@@ -7,8 +7,11 @@ let openedCards = [];
  let counter = 0;
  const movesCounter = document.querySelector('.moves');
  const stars = document.querySelector('.stars');
- const star = stars.firstElementChild;
- let allStars = document.querySelectorAll('.fa-star');
+ const arrayOfStars = Array.from(stars.children);
+ const starOne = stars.firstElementChild;
+ const starTwo = starOne.cloneNode(true);
+ const starThree = starOne.cloneNode(true);
+
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -16,12 +19,7 @@ let openedCards = [];
  *   - add each card's HTML to the page
  */
 
- 
-
-
 makeNewDeck();
-
-
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -38,7 +36,7 @@ makeNewDeck();
  allCards.forEach(function(card){
     card.addEventListener('click', function(){
 
-//counts moves
+//counts moves abd changing the view
     counter++;
     movesCounter.innerHTML = counter;
 
@@ -47,7 +45,7 @@ makeNewDeck();
     }
 
     //debugging
-    console.log('moves ' + counter);
+   // console.log('moves ' + counter);
 
     openedCards.push(card);
     card.classList.add('open', 'show');
@@ -142,13 +140,21 @@ function makeNewDeck(){
     }
 }
 
+//for restart
 function setNumberOfStars(){
-    if(allStars.length < 3){
-        console.log('fire');
+    if(stars.children.length == 2){
+        stars.appendChild(starOne);
+    }else if(stars.children.length == 1){
+        stars.appendChild(starOne);
+        stars.appendChild(starTwo); 
+    }else if(stars.children.length == 0){
+        stars.appendChild(starOne);
+        stars.appendChild(starTwo);
+        stars.appendChild(starThree);
     }
-    
 }
 
+//for restart
 function makeAllCardsClose(){
     allCards.forEach(function(card){
     card.classList.remove('match', 'open','show');
