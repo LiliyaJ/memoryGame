@@ -2,107 +2,110 @@
  * Create a list that holds all of your cards
  */
 
+
+ makeNewDeck();
+ 
+
+//for game
 const allCards = document.querySelectorAll('.card');
 let openedCards = [];
- let counter = 0;
- const movesCounter = document.querySelector('.moves');
- const stars = document.querySelector('.stars');
- const arrayOfStars = Array.from(stars.children);
- const starOne = stars.firstElementChild;
- const starTwo = starOne.cloneNode(true);
- const starThree = starOne.cloneNode(true);
+let counter = 0;
+const movesCounter = document.querySelector('.moves');
+//for stars
+const stars = document.querySelector('.stars');
+const star = stars.firstElementChild;
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+runGame();
 
-makeNewDeck();
 
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
+function runGame(){
 
-//action if a card is clicked
- allCards.forEach(function(card){
-    card.addEventListener('click', function(){
+    //action if a card is clicked
+    allCards.forEach(function(card){
+        card.addEventListener('click', function(){
 
-//counts moves abd changing the view
-    counter++;
-    movesCounter.innerHTML = counter;
 
-    if(timeToRemoveStar()){
-        stars.removeChild(stars.firstElementChild);
-    }
+        if(timeToRemoveStar()){
+            stars.removeChild(stars.firstElementChild);
+        }
 
-    //debugging
-   // console.log('moves ' + counter);
+            //main stuff
+            if ((!card.classList.contains('open') && !card.classList.contains('show'))){
+                if(!card.classList.contains('match')){
+            
+                    //counts moves and changing the view
+                    counter++;
+                    movesCounter.innerHTML = counter;
+                    
+                    openedCards.push(card);
+                    card.classList.add('open', 'show');
 
-    openedCards.push(card);
-    card.classList.add('open', 'show');
-
-    //debugging
-   // console.log(openedCards);
-   // console.log(openedCards.length);
-    
-    if (openedCards.length == 2){
-         //check if they match
-         if(cardsMatch(openedCards)){  
-            openedCards.forEach(function(card){
-                card.classList.remove('open', 'show');
-                card.classList.add('match');
-                openedCards = [];
-            });
-        }else{
-            //if they don't match
-            setTimeout(function(){
-                openedCards.forEach(function(card){
-                    card.classList.remove('open', 'show');
-                });//openedCards
-                openedCards = [];
-            }, 300)//timeout
-        }//else
-    }    
-});  
-});
+                    //debugging
+                    console.log(openedCards);
+                    console.log(openedCards.length);
+                    
+                    //start the timer
+                    if(counter == 1){
+                        timeCount();
+                    }
+                    
+                    if (openedCards.length == 2){
+                        //check if they match
+                        if(cardsMatch(openedCards)){  
+                            openedCards.forEach(function(card){
+                                card.classList.remove('open', 'show');
+                                card.classList.add('match');
+                                openedCards = [];
+                            });
+                        }else{
+                            //if they don't match
+                            setTimeout(function(){
+                                openedCards.forEach(function(card){
+                                    card.classList.remove('open', 'show');
+                                });//openedCards
+                                openedCards = [];
+                            }, 300);//timeout
+                        }//else
+                    }  
+                }
+            }  
+        });  
+    });
+}
 
 //reload
-
 const reload = document.querySelector('.restart');
 
-
 reload.addEventListener('click', function(){
-    
-    //all cards have only one class .card
-    makeAllCardsClose();
-    
-    //schuffle cards
-    makeNewDeck();
 
-    //set 0 moves 
-    counter=0;
-    movesCounter.innerHTML = counter;
     
+    makeAllCardsClose();
+  
+    //make new Deck
+    makeNewDeck();
+    
+    runGame();
+
+    //set 0 moves
+    counter = 0;
+    movesCounter.innerHTML = '0';
+
     //set three stars
     setNumberOfStars();
 
     //set timer to 0
+    clearTimeout(timer); 
+    sec.innerHTML = '00';
+    min.innerHTML = '00';
     
 });
+
 
 //handy methods
 
 // Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
+function shuffle(originalArray) {
+    let array = [...originalArray];
     var currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
@@ -118,39 +121,39 @@ function shuffle(array) {
 
 //making new deck
 function makeNewDeck(){
-    const allCardsArr = Array.from(allCards);
-    const shuffledAllCards = shuffle(allCardsArr);
+   const cards = 
+    ['<i class="fa fa-diamond"></i>', '<i class="fa fa-diamond"></i>', 
+    '<i class="fa fa-paper-plane-o"></i>', '<i class="fa fa-paper-plane-o"></i>',
+    '<i class="fa fa-anchor"></i>', '<i class="fa fa-anchor"></i>', 
+    '<i class="fa fa-leaf"></i>', '<i class="fa fa-leaf"></i>',
+    '<i class="fa fa-bicycle"></i>', '<i class="fa fa-bicycle"></i>',
+    ' <i class="fa fa-bomb"></i>', ' <i class="fa fa-bomb"></i>',
+    '<i class="fa fa-bolt"></i>', '<i class="fa fa-bolt"></i>',
+    '<i class="fa fa-cube"></i>', '<i class="fa fa-cube"></i>']
 
-    for(let i = 0; i<16; i++){
-        //get the class to remove
-        var oldClass = allCards[i].querySelector('i').classList[1];
+    const shuffledCards = shuffle(cards);
     
-        //get the class to add
-        var newClass = shuffledAllCards[i].querySelector('i').classList[1];
-    
-        //just for debugging
-    /* console.log('This is the element ' + i + ' of allCards ' + oldClass + ' and its gonna to be replaced with ' + newClass); */
-    
-        //get the place where to change
-        var itemToChange = allCards[i].querySelector('i');
-    
-        //change classes
-        itemToChange.classList.remove(oldClass);
-        itemToChange.classList.add(newClass);
+    const deck = document.querySelector('.deck');
+    deck.innerHTML = '';
+
+    for(let i = 0; i < shuffledCards.length; i++){
+        const li = document.createElement('li');
+        li.classList.add('card');
+        deck.appendChild(li);
+        li.innerHTML = li.innerHTML + shuffledCards[i];
     }
+}
+
+function isCardClose(){
+    return (!card.classList.contains('open') && !card.classList.contains('show') || !card.classList.contains('match'));
 }
 
 //for restart
 function setNumberOfStars(){
-    if(stars.children.length == 2){
-        stars.appendChild(starOne);
-    }else if(stars.children.length == 1){
-        stars.appendChild(starOne);
-        stars.appendChild(starTwo); 
-    }else if(stars.children.length == 0){
-        stars.appendChild(starOne);
-        stars.appendChild(starTwo);
-        stars.appendChild(starThree);
+    const numberOfStarsToAdd = 3 - stars.children.length;
+    for(let i = 1; i <= numberOfStarsToAdd; i++){
+        const starClone = star.cloneNode(true);
+        stars.appendChild(starClone);
     }
 }
 
@@ -168,3 +171,49 @@ function cardsMatch(array){
 function timeToRemoveStar(){
     return(counter > 0 && counter < 49 && counter%16==0);
 }
+
+function win(){
+       var matchArr = document.querySelectorAll('.match');
+       return (matchArr.length == 16);
+}
+
+//variables for timer
+let sec = document.querySelector('.sec');
+let min = document.querySelector('.min');
+var timer;
+let addSec = 0;
+var addMin = 0;
+
+function timeCount(){
+    
+    if(addSec<10 && !win()){
+        sec.innerHTML = '0' + addSec;
+        addSec++;
+        timer = setTimeout(timeCount, 1000);
+    }else if(addSec<60 && !win()){
+        sec.innerHTML = addSec;
+        addSec++;
+        timer = setTimeout(timeCount, 1000);
+    }else{
+        if(addMin < 10 && !win()){
+            addSec = 0;
+            sec.innerHTML = '0' + addSec;
+            //deletes two second interval
+            addSec++;
+            addMin++;
+            min.innerHTML = '0' + addMin;
+            timer = setTimeout(timeCount, 1000);
+        }else if(!win()){
+            addSec = 0;
+            sec.innerHTML = '0' + addSec;
+            //deletes two second interval
+            addSec++;
+            addMin++;
+            min.innerHTML = addMin;
+            timer = setTimeout(timeCount, 1000); 
+        }else{
+            clearTimeout(timer);
+        }
+    }  
+}
+

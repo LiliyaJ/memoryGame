@@ -104,6 +104,12 @@ h1 {
     display: inline-block;
 }
 
+.score-panel .watch{
+    padding: 0;
+    display: inline-block;
+    margin: 0px 5px 0 25px;
+}
+
 .score-panel .restart {
     float: right;
     cursor: pointer;
