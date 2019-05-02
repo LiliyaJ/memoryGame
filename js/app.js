@@ -1,13 +1,5 @@
-/*
- * Create a list that holds all of your cards
- */
-
-
- makeNewDeck();
- 
-
-//for game
-const allCards = document.querySelectorAll('.card');
+//for runGame
+var allCards = makeNewDeck();
 let openedCards = [];
 let counter = 0;
 const movesCounter = document.querySelector('.moves');
@@ -30,59 +22,61 @@ function runGame(){
         }
 
             //main stuff
-            if ((!card.classList.contains('open') && !card.classList.contains('show'))){
-                if(!card.classList.contains('match')){
+        if ((!card.classList.contains('open') && !card.classList.contains('show'))){
+            if(!card.classList.contains('match')){
             
-                    //counts moves and changing the view
-                    counter++;
-                    movesCounter.innerHTML = counter;
-                    
-                    openedCards.push(card);
-                    card.classList.add('open', 'show');
+                //counts moves and changing the view
+                counter++;
+                movesCounter.innerHTML = counter;
+                 
+                //start the timer
+                if(counter == 1){
+                    timeCount();
+                }
 
-                    //debugging
-                    console.log(openedCards);
-                    console.log(openedCards.length);
+                //open cards
+                openedCards.push(card);
+                card.classList.add('open', 'show');
+
+                //debugging
+                //console.log(openedCards);
+                //console.log(openedCards.length);
                     
-                    //start the timer
-                    if(counter == 1){
-                        timeCount();
-                    }
-                    
-                    if (openedCards.length == 2){
-                        //check if they match
-                        if(cardsMatch(openedCards)){  
+                if (openedCards.length == 2){
+                    //check if they match
+                    if(cardsMatch(openedCards)){  
+                        openedCards.forEach(function(card){
+                            card.classList.remove('open', 'show');
+                            card.classList.add('match');
+                            openedCards = [];
+                        });
+                    }else{
+                        //if they don't match
+                        setTimeout(function(){
                             openedCards.forEach(function(card){
                                 card.classList.remove('open', 'show');
-                                card.classList.add('match');
-                                openedCards = [];
-                            });
-                        }else{
-                            //if they don't match
-                            setTimeout(function(){
-                                openedCards.forEach(function(card){
-                                    card.classList.remove('open', 'show');
-                                });//openedCards
-                                openedCards = [];
-                            }, 300);//timeout
-                        }//else
-                    }  
-                }
-            }  
-        });  
-    });
+                            });//openedCards
+                            openedCards = [];
+                        }, 300);//timeout
+                    }//else
+                }  
+            }
+        }  
+    });  
+});
 }
 
-//reload
+//for restart
 const reload = document.querySelector('.restart');
 
+//restart
 reload.addEventListener('click', function(){
 
     
     makeAllCardsClose();
   
     //make new Deck
-    makeNewDeck();
+    allCards = makeNewDeck();
     
     runGame();
 
@@ -142,6 +136,8 @@ function makeNewDeck(){
         deck.appendChild(li);
         li.innerHTML = li.innerHTML + shuffledCards[i];
     }
+    const allShuffledCards = document.querySelectorAll('.card');
+    return (allShuffledCards); 
 }
 
 function isCardClose(){
@@ -164,14 +160,17 @@ function makeAllCardsClose(){
    });
 }
 
+//runGame
 function cardsMatch(array){
     return (openedCards[0].querySelector('i').classList[1] === openedCards[1].querySelector('i').classList[1]);
 }
 
+//runGame
 function timeToRemoveStar(){
     return(counter > 0 && counter < 49 && counter%16==0);
 }
 
+//for timer
 function win(){
        var matchArr = document.querySelectorAll('.match');
        return (matchArr.length == 16);
@@ -217,3 +216,35 @@ function timeCount(){
     }  
 }
 
+function timeCountAgain(){
+    
+    if(addSec<10 && !win()){
+        sec.innerHTML = '0' + addSec;
+        addSec++;
+        timer = setTimeout(timeCount, 1000);
+    }else if(addSec<60 && !win()){
+        sec.innerHTML = addSec;
+        addSec++;
+        timer = setTimeout(timeCount, 1000);
+    }else{
+        if(addMin < 10 && !win()){
+            addSec = 0;
+            sec.innerHTML = '0' + addSec;
+            //deletes two second interval
+            addSec++;
+            addMin++;
+            min.innerHTML = '0' + addMin;
+            timer = setTimeout(timeCount, 1000);
+        }else if(!win()){
+            addSec = 0;
+            sec.innerHTML = '0' + addSec;
+            //deletes two second interval
+            addSec++;
+            addMin++;
+            min.innerHTML = addMin;
+            timer = setTimeout(timeCount, 1000); 
+        }else{
+            clearTimeout(timer);
+        }
+    }  
+}
