@@ -1,3 +1,5 @@
+
+
 //for runGame
 var allCards = makeNewDeck();
 let openedCards = [];
@@ -8,6 +10,7 @@ const stars = document.querySelector('.stars');
 const star = stars.firstElementChild;
 
 runGame();
+
 
 
 function runGame(){
@@ -38,9 +41,6 @@ function runGame(){
                 openedCards.push(card);
                 card.classList.add('open', 'show');
 
-                //debugging
-                //console.log(openedCards);
-                //console.log(openedCards.length);
                     
                 if (openedCards.length == 2){
                     //check if they match
@@ -49,6 +49,9 @@ function runGame(){
                             card.classList.remove('open', 'show');
                             card.classList.add('match');
                             openedCards = [];
+                            if(win()){
+                                popUpCongWindow(); 
+                            }
                         });
                     }else{
                         //if they don't match
@@ -71,9 +74,18 @@ const reload = document.querySelector('.restart');
 
 //restart
 reload.addEventListener('click', function(){
-
+    sec.innerHTML = '00';
+    min.innerHTML = '00';
+    restart();
     
+});
+
+function restart(){
+     
     makeAllCardsClose();
+
+    //delete the small bug 
+    openedCards = [];
   
     //make new Deck
     allCards = makeNewDeck();
@@ -91,9 +103,9 @@ reload.addEventListener('click', function(){
     clearTimeout(timer); 
     sec.innerHTML = '00';
     min.innerHTML = '00';
-    
-});
-
+    addSec = 0;
+    addMin = 0;
+}
 
 //handy methods
 
@@ -167,7 +179,7 @@ function cardsMatch(array){
 
 //runGame
 function timeToRemoveStar(){
-    return(counter > 0 && counter < 49 && counter%16==0);
+    return(counter > 0 && counter < 41 && counter%20==0);
 }
 
 //for timer
@@ -183,8 +195,7 @@ var timer;
 let addSec = 0;
 var addMin = 0;
 
-function timeCount(){
-    
+function timeCount(){  
     if(addSec<10 && !win()){
         sec.innerHTML = '0' + addSec;
         addSec++;
@@ -216,35 +227,29 @@ function timeCount(){
     }  
 }
 
-function timeCountAgain(){
+//won pop-up
+let result_popup = document.querySelector('.result-pop-up');
+
+function popUpCongWindow(){
     
-    if(addSec<10 && !win()){
-        sec.innerHTML = '0' + addSec;
-        addSec++;
-        timer = setTimeout(timeCount, 1000);
-    }else if(addSec<60 && !win()){
-        sec.innerHTML = addSec;
-        addSec++;
-        timer = setTimeout(timeCount, 1000);
-    }else{
-        if(addMin < 10 && !win()){
-            addSec = 0;
-            sec.innerHTML = '0' + addSec;
-            //deletes two second interval
-            addSec++;
-            addMin++;
-            min.innerHTML = '0' + addMin;
-            timer = setTimeout(timeCount, 1000);
-        }else if(!win()){
-            addSec = 0;
-            sec.innerHTML = '0' + addSec;
-            //deletes two second interval
-            addSec++;
-            addMin++;
-            min.innerHTML = addMin;
-            timer = setTimeout(timeCount, 1000); 
-        }else{
-            clearTimeout(timer);
-        }
-    }  
+    
+    let result_time = document.querySelector('.result-time');
+    let result_moves = document.querySelector('.result-moves');
+    let result_stars = document.querySelector('.result-stars');
+    let button = document.querySelector('.btn');
+    
+    result_time.innerHTML = min.innerHTML + ':' + sec.innerHTML;
+
+    result_moves.innerHTML = movesCounter.innerHTML;
+
+    let length = document.querySelector('.stars').children.length;
+    result_stars.innerHTML = length;
+
+    button.addEventListener('click', function(){
+        restart ();
+        result_popup.style.display = 'none';
+    });
+
+    setTimeout(function(){result_popup.style.display = 'grid'}, 300);
+    
 }
